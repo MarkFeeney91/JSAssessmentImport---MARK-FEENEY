@@ -207,7 +207,7 @@ if (distance_x * distance_x + distance_y * distance_y <= radiusCombined * radius
 if(gameState == "PlayGame")
 	{
  	DrawBackground();
- 	draw_grid(ctx);
+ 	//draw_grid(ctx); FOR DEBUGGING
  	draw_Virus(ctx, playerImage , 32, thePlayer.playX, thePlayer.playY, spriteWidth, spriteHeight, frameX, frameY)
  ctx.stroke();
 	}

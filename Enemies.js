@@ -52,19 +52,21 @@ function UpdateEnemy()
 
 		enemies[i].xOrigin = enemies[i].xPos + enemies[i].radius;
 		enemies[i].yOrigin = enemies[i].yPos + enemies[i].radius;
-		ctx.strokeStyle = "#ffffff";
 		
-		ctx.beginPath();
+	
 
 		if(colCheck(thePlayer, enemies[i]))
 		{
 			gameOver();
 			console.log("Eureka!");
 		}
-
+/*
+		ctx.strokeStyle = "#ffffff";
+		ctx.beginPath();
 		ctx.moveTo(enemies[i].xOrigin, enemies[i].yOrigin);
 		ctx.lineTo(thePlayer.xOrigin, thePlayer.yOrigin);
-		ctx.stroke();		
+		ctx.stroke();	
+		*/	
 		}
 
 

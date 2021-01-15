@@ -60,14 +60,14 @@ for(var i = 0; i < playerBullets.length; i++)
 		playerBullets[i].yOrigin = playerBullets[i].yPos; + playerBullets[i].radius;
 		 
 
-		ctx.strokeStyle = "#008000";
+		/*ctx.strokeStyle = "#008000";
 		ctx.beginPath();
-		//console.log("the enemy xposition i is" + enemies[i].yPos);
-		//console.log("the enemy yOrigin is" + enemies[i].yOrigin);
-		ctx.moveTo(playerBullets[i].xOrigin, playerBullets[i].yOrigin);
+		console.log("the enemy xposition i is" + enemies[i].yPos);
+		console.log("the enemy yOrigin is" + enemies[i].yOrigin);
+		ctx.moveTo(playerBullets[i].xOrigin, playerBullets[i].yOrigin);           //FOR DEBUGGING
 		ctx.lineTo(thePlayer.xOrigin, thePlayer.yOrigin);
 		ctx.stroke();
- //console.log(" my Yposition is " +playerBullets[i].yPos);
+ console.log(" my Yposition is " +playerBullets[i].yPos);*/
 	}
 
 	if(playerBullets[i].yPos < 0 || playerBullets[i].yPos > 800 || playerBullets[i].xPos < 0 || playerBullets[i].xPos > 450)
