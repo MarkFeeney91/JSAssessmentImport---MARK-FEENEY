@@ -40,15 +40,8 @@ if (keys[27])
 if (keys[77]) {
     if(gameState == "MainMenu")
     {
-        console.log("M is pressed")
-        showControls();
+        ctx.drawImage(controlScreenImage, 0, 0)
     }
-    else
-    if(gameState == "ControlScreen")
-    {
-        showMenu();
-    }
-
 }
 
 //FIRE BULLET
@@ -57,10 +50,11 @@ if(keys[32] && canFire) // spacebar
     fireBullet();
     setTimeout(bulletActive, 1000)
     }
-}
+
 
 
 function buttonActive()
 {
 	canPress = true;
+}
 }

@@ -24,13 +24,7 @@ function UpdateEnemy()
 	for(var i = 0; i < enemies.length; i++)
 	{
 		if(enemies[i].enemyDestroyed == false)
-		{
-		//	if(enemies[i].assigned == false)
-		//	{
-			//let assignEnemy = getRndInteger(0,1)
-			//enemies[i].assigned = true;
-			//}
-			
+		{			
 			if(enemies[i].enemyType == 0)
 			{
 			ctx.drawImage(enemyImage, spriteWidth*frameX, spriteHeight*frameY, spriteWidth, spriteHeight,enemies[i].xPos, enemies[i].yPos, enemies[i].width, enemies[i].height);
@@ -48,8 +42,6 @@ function UpdateEnemy()
 			ctx.drawImage(enemyImage3, spriteWidth*frameX, spriteHeight*frameY, spriteWidth, spriteHeight,enemies[i].xPos, enemies[i].yPos, enemies[i].width, enemies[i].height);
 			enemies[i].ySpeed = 3;
 			}
-
-		//console.log("EnemyType is " + enemyType);
 
 		if(isGamePaused == false)
 		{
@@ -100,14 +92,7 @@ function UpdateEnemy()
 }
 
 
-/*
-function RemoveEnemy(enemy)
-{
-	enemies[i].enemyDestroyed = true;	
-	enemies.splice(enemies[i], 1)
-}
 
-*/
 
 function RemoveEnemy(enemy, enemiesArray, i)
 {
@@ -115,7 +100,7 @@ function RemoveEnemy(enemy, enemiesArray, i)
 	enemiesArray.splice(enemiesArray[i], 1)
 }
 
-//function RemoveBullet()
+
 
 
 function SpawnEnemy()
@@ -127,10 +112,6 @@ function SpawnEnemy()
 
 	if(gameState == "PlayGame")
 	{
-
-
-	
-	//window.setTimeout(SpawnEnemy, getRndInteger(1000, 6000));
 
 	enemies.push(new Enemy);
 

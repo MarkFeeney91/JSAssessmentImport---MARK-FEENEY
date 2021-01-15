@@ -30,6 +30,11 @@ function updateScore(){
     {
         speedModifier = 2.5;
     }
+    else
+    if(score > 601)
+    {
+        speedModifier = 10;
+    }
 }
 
 }
