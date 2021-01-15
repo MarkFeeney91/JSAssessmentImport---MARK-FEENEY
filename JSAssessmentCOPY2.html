@@ -1,0 +1,320 @@
+<!doctype html>
+<html>
+ <head>
+ <title>Animation</title>
+ <link rel="stylesheet" href="styles.css">
+ <script src="drawing.js"></script>
+ <script src="Menus.js"></script>
+ <script src="Bullets.js"></script>
+ <script src="Enemies.js"></script>
+ <script src="Input.js"></script>
+ <script src="Backgrounds.js"></script>
+ <script src="GameStateManager.js"></script>
+ <script src="Player.js"></script>
+ <script src="Score.js"></script>
+ <script src="Animations.js"></script>
+
+ </head>
+ <body>
+ <h1>Animation</h1>
+ <canvas id="asteroids" width="450" height="800"></canvas>
+ <script>
+
+
+var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+	window.requestAnimationFrame = requestAnimationFrame;
+
+ var ctx = document.getElementById("asteroids").getContext("2d");
+ var width = 450;
+ var height = 800;
+ var clickSound = new Audio('Audio/SimpleClick.WAV');
+ var shootAud = new Audio("Audio/ShootSound.Wav");
+ var backGroundMusic = new Audio ("Audio/BGMusic.Wav");
+ var defeatMusic = new Audio ("Audio/DefeatMusic.Wav");
+ var menuMusic = new Audio ("Audio/MenuMusic.Wav");
+ var isGamePaused = true;
+
+ var score = 0;
+
+
+
+//window.setTimeout(SpawnEnemy, 3000);
+
+	var thePlayer = new Player();
+
+	// Animation Variables
+    var startTimeMS = 0;
+    var frameX = 0;
+    var frameXMax = 3;
+    var frameY = 0;
+    var frameYMax = 0;
+    var currentframe = 0;
+    var frameMax = 4;
+    var frameTimer = 0.05;
+    var frameTimeMax = 1.017;	
+    var spriteWidth = 64;
+	var spriteHeight = 64;
+	
+	// Image Variables
+	var playerImage = new Image();
+	var rightBorderImg = new Image();
+	var leftBorderImg = new Image();
+	var backGroundImg = new Image();
+	var enemyImage = new Image();
+	var enemyImage2 = new Image();
+	var enemyImage3 = new Image();
+	var menuScreenImage = new Image();
+	var controlScreenImage = new Image();
+	var gameOverImage = new Image();
+	var backGroundImgX = 0;
+	var backgroundImgY = 0;
+	var backgroundImgYy = backgroundImgY - 800;
+	var foreGroundImgX = 0;
+	var foreGroundImgY = 0;
+	var foreGroundImgYy = foreGroundImgY - 800;
+
+
+
+	// Arrays
+	var playerBullets = [];
+	var enemies = [];
+	var enemyTimer = .02;
+	var enemyTimerMax = enemyTimer;
+
+	//Variables to control player shooting
+	var fireRate = 0.5;
+	var canFire = true;
+	var canPress = true;
+	var bulletSpeed = 1;
+
+	var borderpositionX = ctx.canvas.width
+	
+	 var gameState = "MainMenu";
+
+
+
+
+	//these are for the menu=====================================
+	var buttonX = [88, 88, 115, 88];
+	var buttonY = [580, 680, 640, 640];
+	var buttonWidth = [250,250, 250, 250];
+	var buttonHeight = [30,44, 50, 30];
+
+	var mouseX;
+	var mouseY;
+
+	var quitBtnImage = new Image();
+	var playBtnImage = new Image();
+
+
+	var enemySpawnTimer = 2000;
+
+	
+	var buttonClicked; //if value is 1 then its the play button is clicked. if value is 2 then its quit button
+	//===========================================================
+
+
+	var playerX = 0; 
+	var playerY = ctx.canvas.height / 2;
+    
+
+    var keys = [];
+	var isKeyPressed = false;
+	
+    
+	var speedModifier = 1;
+    var friction = 0.7;
+
+    var bulletImage = new Image();
+	var playerImage = new Image();
+	ctx.strokeStyle = "white";
+	ctx.lineWidth = 1.5;
+
+
+ function frame()  //Frame function (Called 60 frames a second from the setInterval Metho)
+ {
+ draw(ctx);
+ update();
+ }
+
+
+ window.addEventListener('load', (event) => {
+	playerImage.src ="VirusSS.png"
+	enemyImage.src = "WhiteCellSS.png";
+	enemyImage2.src = "pillSS.png";
+	enemyImage3.src = "AsprinSS.png"
+	rightBorderImg.src = "SideWallRight.png"
+	leftBorderImg.src = "SideWallLeft.png"
+	backGroundImg.src = "BackGround1.png"
+	bulletImage.src = "Bullet.png";
+	controlScreenImage.src = "ControlsScreen.png";
+	gameOverImage.src = "GameOver.png";
+	showMenu();
+});
+
+
+ function update() // UPDATE FUNCTION
+ {
+   handleGameStates();
+   console.log("is game paused == " + isGamePaused)
+ }
+
+
+function gameOver()
+{
+buttonClicked = 0;
+ctx.canvas.addEventListener("mousemove", checkPos);
+ctx.canvas.addEventListener("mouseup", checkClick);
+drawDeadScore();
+
+backGroundMusic.pause();
+defeatMusic.play();
+backGroundImgX = 0;
+backgroundImgY = 0;
+gameState = "GameOver";		
+
+
+
+}
+
+
+
+
+
+function colCheck(shapeA, shapeB) {
+let distance_x = shapeA.xOrigin - shapeB.xOrigin
+let distance_y = shapeA.yOrigin - shapeB.yOrigin
+
+let radiusCombined = shapeA.radius + shapeB.radius;
+
+if (distance_x * distance_x + distance_y * distance_y <= radiusCombined * radiusCombined) return true;
+
+
+        return false;
+ }
+
+
+
+
+
+
+
+
+
+
+ function draw(ctx) 
+ {
+if(gameState == "PlayGame")
+	{
+ 	DrawBackground();
+ 	draw_grid(ctx);
+ 	draw_Virus(ctx, playerImage , 32, thePlayer.playX, thePlayer.playY, spriteWidth, spriteHeight, frameX, frameY)
+ ctx.stroke();
+	}
+	else
+if(gameState == "GameOver")
+{
+	DrawBackground();
+}
+
+}
+
+
+//----------EVENT LISTENERS----------EVENT LISTENERS----------EVENT LISTENERS----------EVENT LISTENERS----------EVENT LISTENERS----------EVENT LISTENERS
+
+function checkClick(mouseEvent){
+		if(mouseX > buttonX[0] && mouseX < (buttonX[0] + buttonWidth[0])){
+			if(mouseY > buttonY[0] && mouseY < (buttonY[0] + buttonHeight[0])){
+				buttonClicked = 1;
+				startGame();
+			}
+		}
+		if(mouseX > buttonX[1] && mouseX < (buttonX[1] + buttonWidth[1])){
+			if(mouseY > buttonY[1] && mouseY < (buttonY[1] + buttonHeight[1])){
+				buttonClicked = 2;
+				quitGame();
+			}
+		}
+
+		if(mouseX > buttonX[3] && mouseX < (buttonX[3] + buttonWidth[3])){
+			if(mouseY > buttonY[3] && mouseY < (buttonY[3] + buttonHeight[3])){
+				buttonClicked = 3;
+				//startGame();
+			}
+		}
+		
+		if(buttonClicked>0){
+			ctx.canvas.removeEventListener("mousemove", checkPos);
+			ctx.canvas.removeEventListener("mouseup", checkClick);
+		}
+	};
+
+
+// Checks position of Mouse Cursor
+	function checkPos(event){
+		coords = ctx.canvas.relMouseCoords(event);
+		mouseX = coords.x;
+		mouseY = coords.y;
+	}
+
+
+// Code taken from week 6 Uni. Gives accurate coordinates for mouse on screen
+	HTMLCanvasElement.prototype.relMouseCoords = function (event) {
+		var totalOffsetX = 0;
+		var totalOffsetY = 0;
+		var canvasX = 0;
+		var canvasY = 0;
+		var currentElement = this;
+
+		do {
+			totalOffsetX += currentElement.offsetLeft;
+			totalOffsetY += currentElement.offsetTop;
+		}
+		while (currentElement = currentElement.offsetParent)
+
+		canvasX = event.pageX - totalOffsetX;
+		canvasY = event.pageY - totalOffsetY;
+
+		// Fix for variable canvas width
+		canvasX = Math.round( canvasX * (this.width / this.offsetWidth) );
+		canvasY = Math.round( canvasY * (this.height / this.offsetHeight) );
+
+		return {x:canvasX, y:canvasY}
+	}
+	
+
+	document.body.addEventListener("keydown", function (e) {
+		keys[e.keyCode] = true;
+		isKeyPressed = true;
+
+	});
+
+document.body.addEventListener("keydown", function (e) {
+		keys[e.keyCode] = true;
+		isKeyPressed = true;
+	});
+
+	document.body.addEventListener("keyup", function (e) {
+		keys[e.keyCode] = false;
+		isKeyPressed = false;
+	});
+
+
+
+ window.addEventListener("load", function () {
+		showMenu();
+	});
+
+
+	document.body.addEventListener("click", ResetGame);{
+
+	}
+
+//if(gameState != "MainMenu")
+//{
+setInterval(frame, 1000/60.0); // This calls the Frame function at 60 fps
+setInterval(SpawnEnemy, enemySpawnTimer);
+//}
+ </script>
+ </body>
+</html>
